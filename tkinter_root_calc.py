@@ -8,7 +8,8 @@ from bin import RootCalcdef, RootCalc02
 # Funktion um das Ergebnis Dev Methode ins Ausgabefenster zu schreiben
 def calculate_dev():
     result = RootCalcdef.Algebra.numeric_root_calc(radikand=dci.Decimal(radikand.get()),
-                                                   deci_places=int(deci_places.get()),
+                                                   deci_places=int(
+                                                       deci_places.get()),
                                                    root_exponent=dci.Decimal(exponent.get()))
     result_frame.config(state="normal")
     result_frame.delete("1.0", "end")
@@ -19,7 +20,8 @@ def calculate_dev():
 # Funktion um das Ergebnis der Legacy Methode ins Ausgabefenster zu schreiben
 def calculate_legacy():
     result = RootCalc02.Algebra.numeric_root_calc(radikand=dci.Decimal(radikand.get()),
-                                                  deci_places=int(deci_places.get()),
+                                                  deci_places=int(
+                                                      deci_places.get()),
                                                   root_exponent=dci.Decimal(exponent.get()))
     result_frame.config(state="normal")
     result_frame.delete("1.0", "end")
@@ -67,7 +69,8 @@ mainframe.rowconfigure(1, weight=1)
 
 # DropdownMenu um die Berechnungsmethode zu wechseln
 calc_method = tk.StringVar()
-calc_method_box = ttk.Combobox(mainframe, textvariable=calc_method, values=["DevVersion", "Legacy"])
+calc_method_box = ttk.Combobox(mainframe, textvariable=calc_method, values=[
+                               "DevVersion", "Legacy"])
 calc_method_box.bind("<<ComboboxSelected>>", change_calc_method)
 calc_method_box.state(["readonly"])
 calc_method.set("DevVersion")
@@ -78,7 +81,8 @@ validate_input_command = root.register(validate_input)
 
 # Ausgabefenster erstellen
 result_frame = tk.Text(mainframe, height=5, state="disabled")
-result_frame.grid(column=0, row=1, columnspan=3, sticky="NSEW", padx=(5, 0), pady=5)
+result_frame.grid(column=0, row=1, columnspan=3,
+                  sticky="NSEW", padx=(5, 0), pady=5)
 
 # Scrollbar erstellen und mit Ausgabefenster verknüpfen
 result_frame_scrollbar = ttk.Scrollbar(mainframe, command=result_frame.yview)
