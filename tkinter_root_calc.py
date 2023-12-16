@@ -70,7 +70,7 @@ mainframe.rowconfigure(1, weight=1)
 # DropdownMenu um die Berechnungsmethode zu wechseln
 calc_method = tk.StringVar()
 calc_method_box = ttk.Combobox(mainframe, textvariable=calc_method, values=[
-                               "DevVersion", "Legacy"])
+    "DevVersion", "Legacy"])
 calc_method_box.bind("<<ComboboxSelected>>", change_calc_method)
 calc_method_box.state(["readonly"])
 calc_method.set("DevVersion")
