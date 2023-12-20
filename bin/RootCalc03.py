@@ -67,10 +67,11 @@ class Algebra:
     @staticmethod
     def root_calc_up(radikand, root_exponent, result, step):
         while True:
-            temp_result = result ** root_exponent
+            temp_result = (result + step) ** root_exponent
             if temp_result < radikand:
                 result += step
             elif temp_result == radikand:
+                result += step
                 return result, step
             else:
                 step /= 10

@@ -2,7 +2,7 @@
 Testscript um beide Algorithmen nacheinander bis zu einer einstellbaren Anzahl von Nachkommastellen schrittweise
 durchlaufen zu lassen.
 Der Wert von "set_deci_places_start" legt den Anfangswert der Nachkommastellen für den ersten Durchlauf fest.
-Der Wert von "deci_places_add" legt die Anzahl fest die nach jedem durchlauf auf den Anfangswert drauf addiert werden.
+Der Wert von "deci_places_add" legt die Anzahl fest die nach jedem Durchlauf auf den Anfangswert drauf addiert werden.
 Der Wert von "max_deci_places" legt die maximale Anzahl an Nachkommastellen fest die erreicht werden sollen.
 Am Ende werden die Nachkommastellen-werte mit der jeweils gemessenen Berechnungszeit in eine csv Datei gespeichert.
 """
@@ -29,11 +29,9 @@ deci_places = set_deci_places_start  # Startwert der Nachkommastellen festlegen
 data = []  # Liste für die Datenausgabe definieren
 
 while deci_places <= max_deci_places:
-
     process = subprocess.Popen(
-        ["python", file_path_dev],
-        stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-        universal_newlines=True)
+        ["python", file_path_dev], stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True
+    )
 
     # time.sleep(0.1)
 
@@ -75,11 +73,9 @@ deci_places = set_deci_places_start  # Zurücksetzen der Nachkommastellen
 data2 = []
 
 while deci_places <= max_deci_places:
-
     process = subprocess.Popen(
-        ["python", file_path_leg],
-        stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-        universal_newlines=True)
+        ["python", file_path_leg], stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True
+    )
 
     # time.sleep(0.1)
 

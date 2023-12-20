@@ -3,7 +3,6 @@ from decimal import Decimal, getcontext, DecimalException
 
 
 class Algebra:
-
     @staticmethod
     def numeric_root_calc(radikand, deci_places, root_exponent):
         getcontext().prec = deci_places + 10
@@ -16,7 +15,7 @@ class Algebra:
             if root_exponent == 0:
                 result = 1
                 break
-            if step < Decimal(1) / (10 ** deci_places):
+            elif step < Decimal(1) / (10**deci_places):
                 break
             temp_result = (result + step) ** root_exponent
             if temp_result < radikand:
@@ -38,7 +37,6 @@ class Algebra:
 class UserInput:
     @staticmethod
     def main():
-
         while True:
             user_input2 = input("Geben Sie den Wurzelexponenten ein: ").strip().lower()
             if user_input2 in ("exit", "e"):
@@ -88,7 +86,8 @@ class UserInput:
             final_result, execution_time = Algebra.numeric_root_calc(radikand, deci_places, root_exponent)
 
             print(
-                f"Die {user_input2}-fache Wurzel von {radikand} mit {user_input1} Nachkommastellen ist: {final_result}")
+                f"Die {user_input2}-fache Wurzel von {radikand} mit {user_input1} Nachkommastellen ist: {final_result}"
+            )
             print(f"Berechnungszeit: {execution_time * 100:.3f} ms. ")
 
 

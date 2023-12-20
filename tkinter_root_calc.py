@@ -2,12 +2,12 @@ import decimal as dci
 import tkinter as tk
 from tkinter import ttk
 
-from bin import RootCalcdef, RootCalc02
+from bin import RootCalc03, RootCalc02
 
 
 # Funktion um das Ergebnis Dev Methode ins Ausgabefenster zu schreiben
-def calculate_dev():
-    result = RootCalcdef.Algebra.numeric_root_calc(radikand=dci.Decimal(radikand.get()),
+def calc_method_03():
+    result = RootCalc03.Algebra.numeric_root_calc(radikand=dci.Decimal(radikand.get()),
                                                    deci_places=int(
                                                        deci_places.get()),
                                                    root_exponent=dci.Decimal(exponent.get()))
@@ -18,7 +18,7 @@ def calculate_dev():
 
 
 # Funktion um das Ergebnis der Legacy Methode ins Ausgabefenster zu schreiben
-def calculate_legacy():
+def calc_method_02():
     result = RootCalc02.Algebra.numeric_root_calc(radikand=dci.Decimal(radikand.get()),
                                                   deci_places=int(
                                                       deci_places.get()),
@@ -32,10 +32,10 @@ def calculate_legacy():
 # Funktion um die Berechnungsmethode über das DropDown Menu einzustellen
 def change_calc_method(event):
     selected_method = calc_method.get()
-    if selected_method == "DevVersion":
-        calc_button.config(command=calculate_dev)
-    elif selected_method == "Legacy":
-        calc_button.config(command=calculate_legacy)
+    if selected_method == "Version 3":
+        calc_button.config(command=calc_method_03)
+    elif selected_method == "Version 2":
+        calc_button.config(command=calc_method_02)
 
 
 # Funktion definieren, um die Eingaben auf Nummern zu prüfen
@@ -70,10 +70,10 @@ mainframe.rowconfigure(1, weight=1)
 # DropdownMenu um die Berechnungsmethode zu wechseln
 calc_method = tk.StringVar()
 calc_method_box = ttk.Combobox(mainframe, textvariable=calc_method, values=[
-    "DevVersion", "Legacy"])
+    "Version 3", "Version 2"])
 calc_method_box.bind("<<ComboboxSelected>>", change_calc_method)
 calc_method_box.state(["readonly"])
-calc_method.set("DevVersion")
+calc_method.set("Version 3")
 calc_method_box.grid(column=0, row=0, sticky="W")
 
 # Validate Input Funktion registrieren
@@ -116,7 +116,7 @@ deci_label = tk.Label(mainframe, text="Nachkommastellen")
 deci_label.grid(column=0, row=4, sticky="E")
 
 # Button für die Berechnung
-calc_button = ttk.Button(mainframe, text="Berechnen!", command=calculate_dev)
+calc_button = ttk.Button(mainframe, text="Berechnen!", command=calc_method_03)
 calc_button.grid(column=2, row=3, sticky="W")
 
 # Allgemeine Einstellungen
