@@ -9,7 +9,6 @@ result = Decimal(0)
 step = Decimal(1)
 start_time = time.time()
 while True:
-    print(result)
     if root_exponent == 0:
         result = 1
         break
@@ -28,5 +27,4 @@ while True:
 end_time = time.time()
 execution_time = end_time - start_time
 
-print(result)
-print(execution_time)
+print("{:.{}f}".format(result, deci_places))

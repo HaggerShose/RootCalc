@@ -60,9 +60,10 @@ class Algebra:
                 result, step = Algebra.root_calc_up(radikand, root_exponent, result, step)
             elif temp_result == radikand:
                 break
+        formatted_result = "{:.{}f}".format(result, deci_places)
         end_time = time.time()
         execution_time = end_time - start_time
-        return result, execution_time
+        return Decimal(formatted_result), execution_time
 
     @staticmethod
     def root_calc_up(radikand, root_exponent, result, step):

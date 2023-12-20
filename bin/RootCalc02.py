@@ -27,11 +27,11 @@ class Algebra:
                 break
             else:
                 step /= 10
-
+        # Formatieren damit 0 an letzter Stelle angezeigt werden kann
+        formatted_result = "{:.{}f}".format(result, deci_places)
         end_time = time.time()
         execution_time = end_time - start_time
-
-        return result, execution_time
+        return Decimal(formatted_result), execution_time
 
 
 class UserInput:
