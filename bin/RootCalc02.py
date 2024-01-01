@@ -88,7 +88,7 @@ class UserInput:
             print(
                 f"Die {user_input2}-fache Wurzel von {radikand} mit {user_input1} Nachkommastellen ist: {final_result}"
             )
-            print(f"Berechnungszeit: {execution_time * 100:.3f} ms. ")
+            print(f"Berechnungszeit: {execution_time * 1000:.3f} ms. ")
 
 
 if __name__ == "__main__":

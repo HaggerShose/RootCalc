@@ -20,7 +20,7 @@ class UserInput:
 
     @staticmethod
     def main():
-        print("\"e\" oder \"exit\" zum Beenden des Programms eingeben. ")
+        print('"e" oder "exit" zum Beenden des Programms eingeben. ')
         while True:
             root_exponent = UserInput.get_numeric_input("Geben Sie den Wurzelexponenten ein: ")
             if root_exponent is None:
@@ -37,8 +37,9 @@ class UserInput:
             final_result, execution_time = Algebra.numeric_root_calc(radikand, deci_places, root_exponent)
             print(
                 f"Die {root_exponent}-fache Wurzel von {radikand} mit {deci_places} "
-                f"Nachkommastellen ist: {final_result}. ")
-            print(f"Berechnungszeit: {execution_time * 100:.3f} ms. ")
+                f"Nachkommastellen ist: {final_result}. "
+            )
+            print(f"Berechnungszeit: {execution_time * 1000:.3f} ms. ")
 
 
 class Algebra:
@@ -51,9 +52,12 @@ class Algebra:
         start_time = time.time()
 
         while True:
-            if step < Decimal(1) / (10 ** deci_places):
+            if root_exponent == 0:
+                result = 1
                 break
-            temp_result = result ** root_exponent
+            if step < Decimal(1) / (10**deci_places):
+                break
+            temp_result = result**root_exponent
             if temp_result > radikand:
                 result, step = Algebra.root_calc_down(radikand, root_exponent, result, step)
             elif temp_result < radikand:
@@ -81,7 +85,7 @@ class Algebra:
     @staticmethod
     def root_calc_down(radikand, root_exponent, result, step):
         while True:
-            temp_result = result ** root_exponent
+            temp_result = result**root_exponent
             if temp_result > radikand:
                 result -= step
             elif temp_result == radikand:
