@@ -2,27 +2,42 @@ import decimal as dci
 import tkinter as tk
 from tkinter import ttk
 
-from bin import RootCalc03, RootCalc02
+from bin import RootCalc03, RootCalc02, RootCalc03_1
 
 
-# Funktion um das Ergebnis Dev Methode ins Ausgabefenster zu schreiben
-def calc_method_03():
-    result = RootCalc03.Algebra.numeric_root_calc(radikand=dci.Decimal(radikand.get()),
-                                                   deci_places=int(
-                                                       deci_places.get()),
-                                                   root_exponent=dci.Decimal(exponent.get()))
+# Funktion um das Ergebnis von Version 3 ins Ausgabefenster zu schreiben
+def calc_method_03_1():
+    result = RootCalc03_1.Algebra.numeric_root_calc(
+        radikand=dci.Decimal(radikand.get()),
+        deci_places=int(deci_places.get()),
+        root_exponent=dci.Decimal(exponent.get()),
+    )
     result_frame.config(state="normal")
     result_frame.delete("1.0", "end")
     result_frame.insert("1.0", result[0])
     result_frame.config(state="disabled")
 
 
-# Funktion um das Ergebnis der Legacy Methode ins Ausgabefenster zu schreiben
+# Funktion um das Ergebnis von Version 3 ins Ausgabefenster zu schreiben
+def calc_method_03():
+    result = RootCalc03.Algebra.numeric_root_calc(
+        radikand=dci.Decimal(radikand.get()),
+        deci_places=int(deci_places.get()),
+        root_exponent=dci.Decimal(exponent.get()),
+    )
+    result_frame.config(state="normal")
+    result_frame.delete("1.0", "end")
+    result_frame.insert("1.0", result[0])
+    result_frame.config(state="disabled")
+
+
+# Funktion um das Ergebnis von Version 2 ins Ausgabefenster zu schreiben
 def calc_method_02():
-    result = RootCalc02.Algebra.numeric_root_calc(radikand=dci.Decimal(radikand.get()),
-                                                  deci_places=int(
-                                                      deci_places.get()),
-                                                  root_exponent=dci.Decimal(exponent.get()))
+    result = RootCalc02.Algebra.numeric_root_calc(
+        radikand=dci.Decimal(radikand.get()),
+        deci_places=int(deci_places.get()),
+        root_exponent=dci.Decimal(exponent.get()),
+    )
     result_frame.config(state="normal")
     result_frame.delete("1.0", "end")
     result_frame.insert("1.0", result[0])
@@ -32,7 +47,9 @@ def calc_method_02():
 # Funktion um die Berechnungsmethode über das DropDown Menu einzustellen
 def change_calc_method(event):
     selected_method = calc_method.get()
-    if selected_method == "Version 3":
+    if selected_method == "Version 3.1":
+        calc_button.config(command=calc_method_03_1)
+    elif selected_method == "Version 3":
         calc_button.config(command=calc_method_03)
     elif selected_method == "Version 2":
         calc_button.config(command=calc_method_02)
@@ -40,7 +57,7 @@ def change_calc_method(event):
 
 # Funktion definieren, um die Eingaben auf Nummern zu prüfen
 def validate_input(action, bool_if_allowed):
-    if action == '1':
+    if action == "1":
         if bool_if_allowed.isdigit() or bool_if_allowed == "":
             return True
         else:
@@ -69,11 +86,10 @@ mainframe.rowconfigure(1, weight=1)
 
 # DropdownMenu um die Berechnungsmethode zu wechseln
 calc_method = tk.StringVar()
-calc_method_box = ttk.Combobox(mainframe, textvariable=calc_method, values=[
-    "Version 3", "Version 2"])
+calc_method_box = ttk.Combobox(mainframe, textvariable=calc_method, values=["Version 3.1", "Version 3", "Version 2"])
 calc_method_box.bind("<<ComboboxSelected>>", change_calc_method)
 calc_method_box.state(["readonly"])
-calc_method.set("Version 3")
+calc_method.set("Version 3.1")
 calc_method_box.grid(column=0, row=0, sticky="W")
 
 # Validate Input Funktion registrieren
@@ -81,8 +97,7 @@ validate_input_command = root.register(validate_input)
 
 # Ausgabefenster erstellen
 result_frame = tk.Text(mainframe, height=5, state="disabled")
-result_frame.grid(column=0, row=1, columnspan=3,
-                  sticky="NSEW", padx=(5, 0), pady=5)
+result_frame.grid(column=0, row=1, columnspan=3, sticky="NSEW", padx=(5, 0), pady=5)
 
 # Scrollbar erstellen und mit Ausgabefenster verknüpfen
 result_frame_scrollbar = ttk.Scrollbar(mainframe, command=result_frame.yview)
@@ -91,8 +106,9 @@ result_frame_scrollbar.grid(column=3, row=1, sticky="NS")
 
 # Eingabefeld für den Wurzelexponenten
 exponent = tk.StringVar()
-expo_entry = ttk.Entry(mainframe, textvariable=exponent, validate="key", validatecommand=(validate_input_command, "%d",
-                                                                                          "%P"))
+expo_entry = ttk.Entry(
+    mainframe, textvariable=exponent, validate="key", validatecommand=(validate_input_command, "%d", "%P")
+)
 expo_entry.grid(column=1, row=2, sticky="EW")
 
 # Eingabefeld für den zu berechnenden Radikand
