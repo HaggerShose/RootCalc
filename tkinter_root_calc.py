@@ -5,43 +5,65 @@ from tkinter import ttk
 from bin import RootCalc03, RootCalc02, RootCalc03_1
 
 
-# Funktion um das Ergebnis von Version 3 ins Ausgabefenster zu schreiben
+# Funktion um das Ergebnis von Version 3.1 ins Ausgabefenster zu schreiben
 def calc_method_03_1():
-    result = RootCalc03_1.Algebra.numeric_root_calc(
+    result, calc_time = RootCalc03_1.Algebra.numeric_root_calc(
         radikand=dci.Decimal(radikand.get()),
         deci_places=int(deci_places.get()),
         root_exponent=dci.Decimal(exponent.get()),
     )
+
+    # Ergebnis in Ausgabefenster schreiben
     result_frame.config(state="normal")
     result_frame.delete("1.0", "end")
-    result_frame.insert("1.0", result[0])
+    result_frame.insert("1.0", result)
     result_frame.config(state="disabled")
+    # Berechnungszeit formatieren und in Berechnungszeitfenster schreiben
+    calc_timef = "{:05.0f}".format(calc_time * 1000) + " ms"
+    calc_time_frame.config(state="normal")
+    calc_time_frame.delete("1.0", "end")
+    calc_time_frame.insert("1.0", calc_timef)
+    calc_time_frame.config(state="disabled")
 
 
 # Funktion um das Ergebnis von Version 3 ins Ausgabefenster zu schreiben
 def calc_method_03():
-    result = RootCalc03.Algebra.numeric_root_calc(
+    result, calc_time = RootCalc03.Algebra.numeric_root_calc(
         radikand=dci.Decimal(radikand.get()),
         deci_places=int(deci_places.get()),
         root_exponent=dci.Decimal(exponent.get()),
     )
+    # Ergebnis in Ausgabefenster schreiben
     result_frame.config(state="normal")
     result_frame.delete("1.0", "end")
-    result_frame.insert("1.0", result[0])
+    result_frame.insert("1.0", result)
     result_frame.config(state="disabled")
+    # Berechnungszeit formatieren und in Berechnungszeitfenster schreiben
+    calc_timef = "{:05.0f}".format(calc_time * 1000) + " ms"
+    calc_time_frame.config(state="normal")
+    calc_time_frame.delete("1.0", "end")
+    calc_time_frame.insert("1.0", calc_timef)
+    calc_time_frame.config(state="disabled")
 
 
 # Funktion um das Ergebnis von Version 2 ins Ausgabefenster zu schreiben
 def calc_method_02():
-    result = RootCalc02.Algebra.numeric_root_calc(
+    result, calc_time = RootCalc02.Algebra.numeric_root_calc(
         radikand=dci.Decimal(radikand.get()),
         deci_places=int(deci_places.get()),
         root_exponent=dci.Decimal(exponent.get()),
     )
+    # Ergebnis in Ausgabefenster schreiben
     result_frame.config(state="normal")
     result_frame.delete("1.0", "end")
-    result_frame.insert("1.0", result[0])
+    result_frame.insert("1.0", result)
     result_frame.config(state="disabled")
+    # Berechnungszeit formatieren und in Berechnungszeitfenster schreiben
+    calc_timef = "{:05.0f}".format(calc_time * 1000) + " ms"
+    calc_time_frame.config(state="normal")
+    calc_time_frame.delete("1.0", "end")
+    calc_time_frame.insert("1.0", calc_timef)
+    calc_time_frame.config(state="disabled")
 
 
 # Funktion um die Berechnungsmethode über das DropDown Menu einzustellen
@@ -55,13 +77,18 @@ def change_calc_method(event):
         calc_button.config(command=calc_method_02)
 
 
-# Funktion definieren, um die Eingaben auf Nummern zu prüfen
-def validate_input(action, bool_if_allowed):
-    if action == "1":
-        if bool_if_allowed.isdigit() or bool_if_allowed == "":
+# Funktion um die Eingeben zu prüfen damit Exceptions vermieden werden
+def validate_input(action, value_if_allowed):
+    if action == "1":  # Eingabeaktion
+        if value_if_allowed.isdigit() or value_if_allowed in (
+            "",
+            "-",
+        ):  # Nur Ziffern, leere Eingabe oder einzelnes Minuszeichen
+            return True
+        elif value_if_allowed.startswith("-") and value_if_allowed[1:].isdigit():  # Negative Zahlen
             return True
         else:
-            mainframe.bell()  # spielt einen nervigen ton ab, wenn man keine Zahl eingibt
+            mainframe.bell()  # spielt einen nervigen Ton ab, wenn man keine Zahl eingibt
             return False
     return True
 
@@ -80,60 +107,104 @@ root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
 mainframe.columnconfigure(0, weight=1)
-mainframe.columnconfigure(1, weight=1)
-mainframe.columnconfigure(2, weight=1)
+mainframe.columnconfigure(1, weight=0)
+mainframe.columnconfigure(2, weight=0)
+mainframe.columnconfigure(3, weight=0)
+mainframe.columnconfigure(4, weight=0)
+
 mainframe.rowconfigure(1, weight=1)
+
 
 # DropdownMenu um die Berechnungsmethode zu wechseln
 calc_method = tk.StringVar()
-calc_method_box = ttk.Combobox(mainframe, textvariable=calc_method, values=["Version 3.1", "Version 3", "Version 2"])
+calc_method_box = ttk.Combobox(
+    mainframe, textvariable=calc_method, values=["Version 3.1", "Version 3", "Version 2"]
+)
 calc_method_box.bind("<<ComboboxSelected>>", change_calc_method)
 calc_method_box.state(["readonly"])
 calc_method.set("Version 3.1")
-calc_method_box.grid(column=0, row=0, sticky="W")
+calc_method_box.grid(column=1, row=0, sticky="W")
 
-# Validate Input Funktion registrieren
-validate_input_command = root.register(validate_input)
+# Beschriftung für DropDownMenü erstellen und ausrichten
+calc_method_label = tk.Label(mainframe, text="Berechnungsmethode:")
+calc_method_label.grid(column=0, row=0, sticky="E")
+
 
 # Ausgabefenster erstellen
 result_frame = tk.Text(mainframe, height=5, state="disabled")
-result_frame.grid(column=0, row=1, columnspan=3, sticky="NSEW", padx=(5, 0), pady=5)
+result_frame.grid(column=0, row=1, columnspan=5, sticky="NSEW", padx=(5, 0), pady=5)
 
 # Scrollbar erstellen und mit Ausgabefenster verknüpfen
 result_frame_scrollbar = ttk.Scrollbar(mainframe, command=result_frame.yview)
 result_frame["yscrollcommand"] = result_frame_scrollbar.set
-result_frame_scrollbar.grid(column=3, row=1, sticky="NS")
+result_frame_scrollbar.grid(column=5, row=1, sticky="NSW")
+
+
+# Berechnungszeit-Fenster erstellen
+calc_time_frame = tk.Text(mainframe, height=1, width=8, state="disabled")
+calc_time_frame.grid(column=4, row=2, sticky="W", padx=(5, 0), pady=5)
+
+# Beschriftung für Berechnungszeitfenster
+calc_time_label = tk.Label(mainframe, text="Berechnungszeit:")
+calc_time_label.grid(column=3, row=2, sticky="W")
+
+
+# Validate Input Funktion registrieren
+validate_input_command = root.register(validate_input)
+
 
 # Eingabefeld für den Wurzelexponenten
 exponent = tk.StringVar()
 expo_entry = ttk.Entry(
-    mainframe, textvariable=exponent, validate="key", validatecommand=(validate_input_command, "%d", "%P")
+    mainframe,
+    width=15,
+    textvariable=exponent,
+    validate="key",
+    validatecommand=(validate_input_command, "%d", "%P"),
 )
-expo_entry.grid(column=1, row=2, sticky="EW")
+expo_entry.grid(column=2, row=3, sticky="E")
+
+# Beschriftung für Wurzelexponenten Eingabefeld erstellen und ausrichten
+expo_label = tk.Label(mainframe, text="Exponent:")
+expo_label.grid(column=1, row=3, sticky="E")
+
 
 # Eingabefeld für den zu berechnenden Radikand
 radikand = tk.StringVar()
-radikand_entry = ttk.Entry(mainframe, textvariable=radikand)
-radikand_entry.grid(column=1, row=3, sticky="EW")
+radikand_entry = ttk.Entry(
+    mainframe,
+    width=15,
+    textvariable=radikand,
+    validate="key",
+    validatecommand=(validate_input_command, "%d", "%P"),
+)
+radikand_entry.grid(column=2, row=4, sticky="E")
+
+# Beschriftung für Radikand Eingabefeld erstellen und ausrichten
+radi_label = tk.Label(mainframe, text="Radikand:")
+radi_label.grid(column=1, row=4, sticky="E")
+
 
 # Eingabefeld für die Anzahl der Nachkommastellen
 deci_places = tk.StringVar()
-deci_places_entry = ttk.Entry(mainframe, textvariable=deci_places)
-deci_places_entry.grid(column=1, row=4, sticky="EW")
+deci_places_entry = ttk.Entry(
+    mainframe,
+    width=15,
+    textvariable=deci_places,
+    validate="key",
+    validatecommand=(validate_input_command, "%d", "%P"),
+)
+deci_places_entry.grid(column=2, row=5, sticky="E")
 
-# Beschriftung für die Eingabefelder erstellen und Ausrichten
-expo_label = tk.Label(mainframe, text="Exponent")
-expo_label.grid(column=0, row=2, sticky="E")
+# Beschriftung für Nachkommastellen Eingabefeld erstellen und ausrichten
+deci_label = tk.Label(mainframe, text="Nachkommastellen:")
+deci_label.grid(column=1, row=5, sticky="E")
 
-radi_label = tk.Label(mainframe, text="Radikand")
-radi_label.grid(column=0, row=3, sticky="E")
-
-deci_label = tk.Label(mainframe, text="Nachkommastellen")
-deci_label.grid(column=0, row=4, sticky="E")
 
 # Button für die Berechnung
-calc_button = ttk.Button(mainframe, text="Berechnen!", command=calc_method_03)
-calc_button.grid(column=2, row=3, sticky="W")
+calc_button = ttk.Button(mainframe, text="Berechnen!", command=calc_method_03_1)
+calc_button.grid(column=3, row=5, sticky="W")
+
 
 # Allgemeine Einstellungen
 for child in mainframe.winfo_children():
@@ -147,3 +218,5 @@ root.update_idletasks()
 root.minsize(root.winfo_width(), root.winfo_height())
 
 root.mainloop()
+
+# TODO: Negative Eingaben richtig weitergeben und Methoden dafür aktualisieren

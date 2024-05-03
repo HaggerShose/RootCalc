@@ -6,6 +6,7 @@ Der Wert von "deci_places_add" legt die Anzahl fest die nach jedem Durchlauf auf
 Der Wert von "max_deci_places" legt die maximale Anzahl an Nachkommastellen fest die erreicht werden sollen.
 Am Ende werden die Nachkommastellen-werte mit der jeweils gemessenen Berechnungszeit in eine csv Datei gespeichert.
 """
+
 import os
 import subprocess
 
@@ -30,7 +31,10 @@ data = []  # Liste für die Datenausgabe definieren
 
 while deci_places <= max_deci_places:
     process = subprocess.Popen(
-        ["python", file_path_dev], stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True
+        ["python", file_path_dev],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        universal_newlines=True,
     )
 
     # time.sleep(0.1)
@@ -64,7 +68,12 @@ while deci_places <= max_deci_places:
     value_berechnungszeit = float(value_berechnungszeit)
     print(f"{deci_places:04d} {value_berechnungszeit:07.3f}ms def")
     # Gefilterte Werte in eine neue Liste eintragen
-    data.append(["{:04d}".format(int(deci_places)), "{:07.3f}".format(float(value_berechnungszeit)) + " ms"])
+    data.append(
+        [
+            "{:04d}".format(int(deci_places)),
+            "{:07.3f}".format(float(value_berechnungszeit)) + " ms",
+        ]
+    )
     # Nachkommastellen um 50 erhöhen
     deci_places += deci_places_add
 
@@ -74,7 +83,10 @@ data2 = []
 
 while deci_places <= max_deci_places:
     process = subprocess.Popen(
-        ["python", file_path_leg], stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True
+        ["python", file_path_leg],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        universal_newlines=True,
     )
 
     # time.sleep(0.1)
@@ -106,7 +118,12 @@ while deci_places <= max_deci_places:
     value_berechnungszeit = parts[5].strip(" ms")
     value_berechnungszeit = float(value_berechnungszeit)
     print(f"{deci_places:04d} {value_berechnungszeit:07.3f}ms 02")
-    data2.append(["{:04d}".format(int(deci_places)), "{:07.3f}".format(float(value_berechnungszeit)) + " ms"])
+    data2.append(
+        [
+            "{:04d}".format(int(deci_places)),
+            "{:07.3f}".format(float(value_berechnungszeit)) + " ms",
+        ]
+    )
     deci_places += deci_places_add
 
 # Daten aus dem ersten Programm in PandaDataFrame umwandeln

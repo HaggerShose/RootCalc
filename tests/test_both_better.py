@@ -1,19 +1,24 @@
 import pandas as pd
-import os
 import pyodbc
 from sqlalchemy import create_engine, exc, inspect
 import urllib.parse
 
 import sys
+import os
 
+# Verzeichnis des aktuellen Skripts
+current_dir = os.path.dirname(__file__)
+# Root-Verzeichnis des Projekts
+project_rootpath = os.path.abspath(os.path.join(current_dir, ".."))
+sys.path.insert(0, project_rootpath)
+# Import von Modulen relativ zum Root-Verzeichnis
 from bin.RootCalc02 import Algebra as Algebra_calc_02
 from bin.RootCalc03 import Algebra as Algebra_calc_03
 from bin.RootCalc03_1 import Algebra as Algebra_calc_03_1
 
 # Erstellen eines relativen Dateipfades um produzierte Daten in einer Datei zu speichern
 # Obsolet da ich einen lokalen SQL-Server benutze
-current_path = os.path.dirname(__file__)
-file_path_result_data = os.path.join(current_path, "../data/better_output_table.csv")
+file_path_result_data = os.path.join(current_dir, "../data/better_output_table.csv")
 
 # Funktionen für Übersicht als Variablen definieren
 calc_02 = Algebra_calc_02.numeric_root_calc
@@ -86,8 +91,9 @@ columns = [
 # Das nachfolgende ist nur eine kleine Spielerei um zu schauen wie man DataFrames manipulieren kann.
 export_data_index1 = [0, 1, 2, 3, 4, 5, 6, 7]
 # export_data_df = pd.DataFrame(export_data, columns=columns)
-export_data_df = pd.DataFrame([{columns[i]: row[i] for i in export_data_index1} for row in export_data])
-
+export_data_df = pd.DataFrame(
+    [{columns[i]: row[i] for i in export_data_index1} for row in export_data]
+)
 # Dataframe um weitere Spalte an einer bestimmten Stelle erweitern
 insert_index = columns.index("Berechnungszeit_v03")
 export_data_df.insert(insert_index + 1, "Berechnungszeit_v03_1", [row[8] for row in export_data])
@@ -97,13 +103,13 @@ export_data_df["v03.1-Werte"] = [row[9] for row in export_data]
 
 # Ab hier beginnt die Kommunikation mit dem SQL-Server
 # Name der Tabelle festlegen
-table_name = "RootCalcValues2"
+table_name = "RootCalcValues"
 # TODO: Automatisches Generieren von Tabellennamen
 
 # Verbindungszeichenkette für PyODBC erstellen
 connection_string = (
     "DRIVER={ODBC Driver 17 for SQL Server};"
-    "SERVER=DESKTOP-9K0O52U\\SQLEXPRESS;"
+    "SERVER=WOODSTOCK\\SQLEXPRESS;"
     "DATABASE=RootCalcValues;"
     "Trusted_Connection=yes;"
 )
@@ -112,19 +118,27 @@ try:
     # PyODBC-Verbindung herstellen
     with pyodbc.connect(connection_string) as conn:
         # SQLAlchemy Engine erstellen
-        engine = create_engine(f"mssql+pyodbc:///?odbc_connect={urllib.parse.quote_plus(connection_string)}")
+        engine = create_engine(
+            f"mssql+pyodbc:///?odbc_connect={urllib.parse.quote_plus(connection_string)}"
+        )
 
         # Prüfe ob die Tabelle existiert und Frage die vorhandenen Daten ab
         inspector = inspect(engine)
         if inspector.has_table(table_name):
-            existing_data_query = f"SELECT Radikand, Wurzelexponent, Nachkommastellen FROM {table_name}"
+            existing_data_query = (
+                f"SELECT Radikand, Wurzelexponent, Nachkommastellen FROM {table_name}"
+            )
             with engine.connect() as connection:
                 existing_data_df = pd.read_sql_query(existing_data_query, connection)
                 # Merge durchführen, um nur die neuen Daten zu behalten
                 merged_df = pd.merge(existing_data_df, export_data_df, how="right", indicator=True)
-                unique_export_data_df = merged_df[merged_df["_merge"] == "right_only"].drop("_merge", axis=1)
+                unique_export_data_df = merged_df[merged_df["_merge"] == "right_only"].drop(
+                    "_merge", axis=1
+                )
                 # Daten in die SQL-Server-Tabelle schreiben
-                unique_export_data_df.to_sql(table_name, con=engine, if_exists="append", index=False)
+                unique_export_data_df.to_sql(
+                    table_name, con=engine, if_exists="append", index=False
+                )
         else:
             export_data_df.to_sql(table_name, con=engine, index=False)
 

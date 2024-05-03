@@ -9,6 +9,7 @@
         "pymssql",
         "radi",
         "radikand",
-        "SQLEXPRESS"
+        "SQLEXPRESS",
+        "timef"
     ]
 }

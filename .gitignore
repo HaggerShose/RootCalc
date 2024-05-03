@@ -4,3 +4,6 @@ dist
 bin/__pycache__
 tests/__pycache__
 __pycache__
+RootCalc.code-workspace
+existing_data.csv
+launchjsonarchive.txt
