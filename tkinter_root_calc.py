@@ -5,91 +5,74 @@ from tkinter import ttk
 from bin import RootCalc02, RootCalc03, RootCalc03_1, RootCalc04
 
 
-# Funktion um das Ergebnis von Version 2 ins Ausgabefenster zu schreiben
+def write_results(result, calc_time, format_time=True):
+    # Ergebnis ins Ausgabefenster schreiben
+    result_frame.config(state="normal")
+    result_frame.delete("1.0", "end")
+    result_frame.insert("1.0", result)
+    result_frame.config(state="disabled")
+
+    # Berechnungszeit formatieren und in Berechnungszeitfenster schreiben
+    if format_time:
+        calc_timef = "{:05.0f}".format(calc_time * 1000) + " ms"
+    else:
+        calc_timef = calc_time + " ms"
+    calc_time_frame.config(state="normal")
+    calc_time_frame.delete("1.0", "end")
+    calc_time_frame.insert("1.0", calc_timef)
+    calc_time_frame.config(state="disabled")
+
+
+def calc_method(version):
+    if version == "02":
+        result, calc_time = RootCalc02.Algebra.numeric_root_calc(
+            radikand=dci.Decimal(radikand.get()),
+            deci_places=int(deci_places.get()),
+            root_exponent=dci.Decimal(exponent.get()),
+        )
+        write_results(result, calc_time, format_time=True)
+    elif version == "03":
+        result, calc_time = RootCalc03.Algebra.numeric_root_calc(
+            radikand=dci.Decimal(radikand.get()),
+            deci_places=int(deci_places.get()),
+            root_exponent=dci.Decimal(exponent.get()),
+        )
+        write_results(result, calc_time, format_time=True)
+    elif version == "03_1":
+        result, calc_time = RootCalc03_1.Algebra.numeric_root_calc(
+            radikand=dci.Decimal(radikand.get()),
+            deci_places=int(deci_places.get()),
+            root_exponent=dci.Decimal(exponent.get()),
+        )
+        write_results(result, calc_time, format_time=True)
+    elif version == "04":
+        result, calc_time = RootCalc04.Algebra.numeric_root_calc(
+            radikand=dci.Decimal(radikand.get()),
+            deci_places=int(deci_places.get()),
+            root_exponent=dci.Decimal(exponent.get()),
+        )
+        write_results(result, calc_time, format_time=False)
+
+
 def calc_method_02():
-    result, calc_time = RootCalc02.Algebra.numeric_root_calc(
-        radikand=dci.Decimal(radikand.get()),
-        deci_places=int(deci_places.get()),
-        root_exponent=dci.Decimal(exponent.get()),
-    )
-    # Ergebnis in Ausgabefenster schreiben
-    result_frame.config(state="normal")
-    result_frame.delete("1.0", "end")
-    result_frame.insert("1.0", result)
-    result_frame.config(state="disabled")
-    # Berechnungszeit formatieren und in Berechnungszeitfenster schreiben
-    calc_timef = "{:05.0f}".format(calc_time * 1000) + " ms"
-    calc_time_frame.config(state="normal")
-    calc_time_frame.delete("1.0", "end")
-    calc_time_frame.insert("1.0", calc_timef)
-    calc_time_frame.config(state="disabled")
+    calc_method("02")
 
 
-# Funktion um das Ergebnis von Version 3 ins Ausgabefenster zu schreiben
 def calc_method_03():
-    result, calc_time = RootCalc03.Algebra.numeric_root_calc(
-        radikand=dci.Decimal(radikand.get()),
-        deci_places=int(deci_places.get()),
-        root_exponent=dci.Decimal(exponent.get()),
-    )
-    # Ergebnis in Ausgabefenster schreiben
-    result_frame.config(state="normal")
-    result_frame.delete("1.0", "end")
-    result_frame.insert("1.0", result)
-    result_frame.config(state="disabled")
-    # Berechnungszeit formatieren und in Berechnungszeitfenster schreiben
-    calc_timef = "{:05.0f}".format(calc_time * 1000) + " ms"
-    calc_time_frame.config(state="normal")
-    calc_time_frame.delete("1.0", "end")
-    calc_time_frame.insert("1.0", calc_timef)
-    calc_time_frame.config(state="disabled")
+    calc_method("03")
 
 
-# Funktion um das Ergebnis von Version 3.1 ins Ausgabefenster zu schreiben
 def calc_method_03_1():
-    result, calc_time = RootCalc03_1.Algebra.numeric_root_calc(
-        radikand=dci.Decimal(radikand.get()),
-        deci_places=int(deci_places.get()),
-        root_exponent=dci.Decimal(exponent.get()),
-    )
-
-    # Ergebnis in Ausgabefenster schreiben
-    result_frame.config(state="normal")
-    result_frame.delete("1.0", "end")
-    result_frame.insert("1.0", result)
-    result_frame.config(state="disabled")
-    # Berechnungszeit formatieren und in Berechnungszeitfenster schreiben
-    calc_timef = "{:05.0f}".format(calc_time * 1000) + " ms"
-    calc_time_frame.config(state="normal")
-    calc_time_frame.delete("1.0", "end")
-    calc_time_frame.insert("1.0", calc_timef)
-    calc_time_frame.config(state="disabled")
+    calc_method("03_1")
 
 
-# Funktion um das Ergebnis von Version 4 ins Ausgabefenster zu schreiben
 def calc_method_04():
-    result, calc_time = RootCalc04.Algebra.numeric_root_calc(
-        radikand=dci.Decimal(radikand.get()),
-        deci_places=int(deci_places.get()),
-        root_exponent=dci.Decimal(exponent.get()),
-    )
-
-    # Ergebnis in Ausgabefenster schreiben
-    result_frame.config(state="normal")
-    result_frame.delete("1.0", "end")
-    result_frame.insert("1.0", result)
-    result_frame.config(state="disabled")
-    # Berechnungszeit in Berechnungszeitfenster schreiben
-    # Werte werden ab ver4 schon vorformatiert weiter gegeben
-    calc_time_frame.config(state="normal")
-    calc_time_frame.delete("1.0", "end")
-    calc_time_frame.insert("1.0", calc_time)
-    calc_time_frame.config(state="disabled")
+    calc_method("04")
 
 
 # Funktion um die Berechnungsmethode über das DropDown Menu einzustellen
 def change_calc_method(event):
-    selected_method = calc_method.get()
+    selected_method = calc_method_changer.get()
     if selected_method == "Version 2":
         calc_button.config(command=calc_method_02)
     if selected_method == "Version 3":
@@ -139,13 +122,15 @@ mainframe.rowconfigure(1, weight=1)
 
 
 # DropdownMenu um die Berechnungsmethode zu wechseln
-calc_method = tk.StringVar()
+calc_method_changer = tk.StringVar()
 calc_method_box = ttk.Combobox(
-    mainframe, textvariable=calc_method, values=["Version 3.1", "Version 3", "Version 2"]
+    mainframe,
+    textvariable=calc_method_changer,
+    values=["Version 4", "Version 3.1", "Version 3", "Version 2"],
 )
 calc_method_box.bind("<<ComboboxSelected>>", change_calc_method)
 calc_method_box.state(["readonly"])
-calc_method.set("Version 4")
+calc_method_changer.set("Version 4")
 calc_method_box.grid(column=1, row=0, sticky="W")
 
 # Beschriftung für DropDownMenü erstellen und ausrichten
