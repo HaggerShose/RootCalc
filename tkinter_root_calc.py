@@ -2,17 +2,16 @@ import decimal as dci
 import tkinter as tk
 from tkinter import ttk
 
-from bin import RootCalc03, RootCalc02, RootCalc03_1
+from bin import RootCalc02, RootCalc03, RootCalc03_1, RootCalc04
 
 
-# Funktion um das Ergebnis von Version 3.1 ins Ausgabefenster zu schreiben
-def calc_method_03_1():
-    result, calc_time = RootCalc03_1.Algebra.numeric_root_calc(
+# Funktion um das Ergebnis von Version 2 ins Ausgabefenster zu schreiben
+def calc_method_02():
+    result, calc_time = RootCalc02.Algebra.numeric_root_calc(
         radikand=dci.Decimal(radikand.get()),
         deci_places=int(deci_places.get()),
         root_exponent=dci.Decimal(exponent.get()),
     )
-
     # Ergebnis in Ausgabefenster schreiben
     result_frame.config(state="normal")
     result_frame.delete("1.0", "end")
@@ -46,13 +45,14 @@ def calc_method_03():
     calc_time_frame.config(state="disabled")
 
 
-# Funktion um das Ergebnis von Version 2 ins Ausgabefenster zu schreiben
-def calc_method_02():
-    result, calc_time = RootCalc02.Algebra.numeric_root_calc(
+# Funktion um das Ergebnis von Version 3.1 ins Ausgabefenster zu schreiben
+def calc_method_03_1():
+    result, calc_time = RootCalc03_1.Algebra.numeric_root_calc(
         radikand=dci.Decimal(radikand.get()),
         deci_places=int(deci_places.get()),
         root_exponent=dci.Decimal(exponent.get()),
     )
+
     # Ergebnis in Ausgabefenster schreiben
     result_frame.config(state="normal")
     result_frame.delete("1.0", "end")
@@ -66,15 +66,38 @@ def calc_method_02():
     calc_time_frame.config(state="disabled")
 
 
+# Funktion um das Ergebnis von Version 4 ins Ausgabefenster zu schreiben
+def calc_method_04():
+    result, calc_time = RootCalc04.Algebra.numeric_root_calc(
+        radikand=dci.Decimal(radikand.get()),
+        deci_places=int(deci_places.get()),
+        root_exponent=dci.Decimal(exponent.get()),
+    )
+
+    # Ergebnis in Ausgabefenster schreiben
+    result_frame.config(state="normal")
+    result_frame.delete("1.0", "end")
+    result_frame.insert("1.0", result)
+    result_frame.config(state="disabled")
+    # Berechnungszeit in Berechnungszeitfenster schreiben
+    # Werte werden ab ver4 schon vorformatiert weiter gegeben
+    calc_time_frame.config(state="normal")
+    calc_time_frame.delete("1.0", "end")
+    calc_time_frame.insert("1.0", calc_time)
+    calc_time_frame.config(state="disabled")
+
+
 # Funktion um die Berechnungsmethode über das DropDown Menu einzustellen
 def change_calc_method(event):
     selected_method = calc_method.get()
+    if selected_method == "Version 2":
+        calc_button.config(command=calc_method_02)
+    if selected_method == "Version 3":
+        calc_button.config(command=calc_method_03)
     if selected_method == "Version 3.1":
         calc_button.config(command=calc_method_03_1)
-    elif selected_method == "Version 3":
-        calc_button.config(command=calc_method_03)
-    elif selected_method == "Version 2":
-        calc_button.config(command=calc_method_02)
+    if selected_method == "Version 4":
+        calc_button.config(command=calc_method_04)
 
 
 # Funktion um die Eingeben zu prüfen damit Exceptions vermieden werden
@@ -122,7 +145,7 @@ calc_method_box = ttk.Combobox(
 )
 calc_method_box.bind("<<ComboboxSelected>>", change_calc_method)
 calc_method_box.state(["readonly"])
-calc_method.set("Version 3.1")
+calc_method.set("Version 4")
 calc_method_box.grid(column=1, row=0, sticky="W")
 
 # Beschriftung für DropDownMenü erstellen und ausrichten
@@ -202,7 +225,7 @@ deci_label.grid(column=1, row=5, sticky="E")
 
 
 # Button für die Berechnung
-calc_button = ttk.Button(mainframe, text="Berechnen!", command=calc_method_03_1)
+calc_button = ttk.Button(mainframe, text="Berechnen!", command=calc_method_04)
 calc_button.grid(column=3, row=5, sticky="W")
 
 

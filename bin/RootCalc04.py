@@ -61,7 +61,7 @@ class UserInput:
                 f"Die {root_exponent}-fache Wurzel von {radikand} mit {deci_places} "
                 f"Nachkommastellen ist: {final_result}. "
             )
-            print(f"Berechnungszeit: {execution_time * 100:.3f} ms. ")
+            print(f"Berechnungszeit: {execution_time} ms. ")
 
 
 class Algebra:
@@ -74,44 +74,61 @@ class Algebra:
         step = Decimal(1)
         kill_condition = Decimal(1) / (10**deci_places)
         start_time = time.time()
-        while step >= kill_condition:
-            if root_exponent == 0:
-                result = 1
-                break
-            elif root_exponent == 1:
-                result = radikand
-                break
-            elif radikand == 0:
-                result = 0
-                break
-            elif radikand == 1:
-                result = 1
-                break
-            temp_result_int = result
-            while temp_result_int < radikand / 2:
-                if temp_result_int**root_exponent == radikand:
-                    formatted_result = "{:.{}f}".format(temp_result_int, deci_places)
-                    end_time = time.time()
-                    execution_time = end_time - start_time
-                    return Decimal(formatted_result), execution_time
-                else:
-                    temp_result_int += step
+        # Behandle negative Exponenten
+        if root_exponent < 0:
+            # Berechne die Wurzel mit dem positiven Exponenten und invertiere das Ergebnis
+            positive_exponent = abs(root_exponent)
+            positive_result, _ = Algebra.numeric_root_calc(radikand, deci_places, positive_exponent)
+            result = Decimal(1) / positive_result
+        # Schleifen zur Berechnung
+        else:
+            # Sonderfälle
             while step >= kill_condition:
-                temp_result = result + 5 * step
-                comp_value = temp_result**root_exponent
-                if comp_value > radikand:
-                    result, step = Algebra.root_calc_down(
-                        radikand, root_exponent, step, temp_result
-                    )
-                elif comp_value < radikand:
-                    result, step = Algebra.root_calc_up(radikand, root_exponent, step, temp_result)
-                elif comp_value == radikand:  # Da stimmt etwas nicht
+                if root_exponent == 0:
+                    result = 1
                     break
-        formatted_result = "{:.{}f}".format(result, deci_places)
+                elif root_exponent == 1:
+                    result = radikand
+                    break
+                elif radikand == 0:
+                    result = 0
+                    break
+                elif radikand == 1:
+                    result = 1
+                    break
+                temp_result_int = result
+                # Abkürzung um bei ganzzahligen Ergebnissen nicht n NachkommaNullen berechnen zu lassen
+                while temp_result_int < radikand / 2:
+                    if temp_result_int**root_exponent == radikand:
+                        end_time = time.time()
+                        execution_time = end_time - start_time
+                        formatted_exe_time = "{:05.0f}".format(execution_time * 1000)
+                        formatted_result = "{:.{}f}".format(temp_result_int, deci_places)
+                        return Decimal(formatted_result), formatted_exe_time
+                    else:
+                        temp_result_int += step
+                # Hauptschleife zur Berechnung
+                while step >= kill_condition:
+                    temp_result = result + 5 * step
+                    comp_value = temp_result**root_exponent
+                    if comp_value > radikand:
+                        result, step = Algebra.root_calc_down(
+                            radikand, root_exponent, step, temp_result
+                        )
+                    elif comp_value < radikand:
+                        result, step = Algebra.root_calc_up(
+                            radikand, root_exponent, step, temp_result
+                        )
+                    elif comp_value == radikand:  # Da stimmt etwas nicht
+                        break
+
         end_time = time.time()
         execution_time = end_time - start_time
-        return Decimal(formatted_result), execution_time
+        formatted_exe_time = "{:05.0f}".format(execution_time * 1000)
+        formatted_result = "{:.{}f}".format(result, deci_places)
+        return Decimal(formatted_result), formatted_exe_time
 
+    # Methoden um Nachkommastellen zu Addieren oder Subtrahieren
     @staticmethod
     def root_calc_up(radikand, root_exponent, step, temp_result):
         while True:
